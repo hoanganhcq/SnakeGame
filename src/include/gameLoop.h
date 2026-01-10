@@ -1,0 +1,35 @@
+#pragma once
+#include <SDL2/SDL.h>
+
+
+enum class GameState {
+    MENU = 0,
+    PLAYING = 1,
+    PAUSE = 2,
+    GAME_OVER = 3
+};
+
+
+class GameLoop {
+private:
+    const int WIDTH = 800;
+    const int HEIGHT = 600;
+
+    GameState currentState = GameState::PLAYING; // init in MENU then
+
+    SDL_Window* window = NULL;
+    SDL_Renderer* renderer = NULL;
+    SDL_Event event = {};
+
+    bool running;
+public:
+    GameLoop();
+
+    bool initialize();
+    void handleEvents();
+    void update();
+    void render();
+
+    bool isRunning();
+    void clean();
+};

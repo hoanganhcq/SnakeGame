@@ -1,0 +1,34 @@
+# Executable files and build files
+*.exe
+*.o
+*.obj
+*.pdb
+main.exe
+game.exe
+
+# Build folder
+build/
+bin/
+Debug/
+Release/
+x64/
+x86/
+
+# Downloadable library
+lib/
+SDL2/
+SDL2-devel-*/
+mingw*/ 
+msys*/
+
+# VS code settings
+.vscode/
+!.vscode/settings.json   
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Temporary file
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
