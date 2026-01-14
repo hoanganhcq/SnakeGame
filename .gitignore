@@ -1,10 +1,11 @@
 # Executable files and build files
 *.exe
 *.o
+*.d
 *.obj
 *.pdb
-main.exe
-game.exe
+*.exe
+*.dll
 
 # Build folder
 build/
