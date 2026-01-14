@@ -1,4 +1,4 @@
-main.o: main.cpp src/include/gameLoop.h src/include/textureManager.h \
+src/textureManager.o: src/textureManager.cpp src/include/textureManager.h \
  src/include/SDL2/SDL.h src/include/SDL2/SDL_main.h \
  src/include/SDL2/SDL_stdinc.h src/include/SDL2/SDL_config.h \
  src/include/SDL2/SDL_platform.h src/include/SDL2/begin_code.h \
@@ -26,7 +26,6 @@ main.o: main.cpp src/include/gameLoop.h src/include/textureManager.h \
  src/include/SDL2/SDL_version.h src/include/SDL2/SDL_locale.h \
  src/include/SDL2/SDL_misc.h src/include/SDL2/SDL_image.h \
  src/include/SDL2/SDL.h
-src/include/gameLoop.h:
 src/include/textureManager.h:
 src/include/SDL2/SDL.h:
 src/include/SDL2/SDL_main.h:

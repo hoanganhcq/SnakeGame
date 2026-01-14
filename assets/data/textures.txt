@@ -1,0 +1,1 @@
+char_snake_head	assets/image/snake_d.png

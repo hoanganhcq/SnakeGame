@@ -36,6 +36,18 @@ bool GameLoop::initialize() {
     
     SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
 
+    // Load all Images
+    int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
+    if (!(IMG_Init(imgFlags) & imgFlags)) {
+        std::cout << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << std::endl;
+        return false;
+    }
+
+    if (!TextureManager::Instance()->loadFromList(renderer, "assets/data/textures.txt")) {
+        std::cout << "Failed to load textures!" << std::endl;
+        return false;
+    }
+
     running = true;
     return true;
 }
@@ -43,10 +55,11 @@ bool GameLoop::initialize() {
 
 void GameLoop::handleEvents() {
     SDL_PollEvent(&event);
-    if (event.type == SDL_QUIT) {
-        running = false;
-        return;
-    }
+        if (event.type == SDL_QUIT) {
+            running = false;
+            return;
+        }
+    
 }
 
 
@@ -70,9 +83,14 @@ bool GameLoop::isRunning() {
 }
 
 void GameLoop::clean() {
+
+    TextureManager::Instance()->clean();
+
     if (renderer) SDL_DestroyRenderer(renderer);
     if (window) SDL_DestroyWindow(window);
     renderer = NULL;
     window   = NULL;
+
+    IMG_Quit();
     SDL_Quit();
 }
