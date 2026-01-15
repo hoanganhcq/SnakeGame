@@ -10,12 +10,16 @@ struct SnakeSegment {
 
 class Snake : public Object {
 private:
+    const int SEGMENT_SIZE = 20;
     std::deque<SnakeSegment> body;
     
     SDL_Texture* headTexture;
     SDL_Texture* bodyTexture;
 
     int dirX, dirY, nextDirX, nextDirY;
+    int delay;
+    int moveTimer;
+
     bool growing;
 public:
     Snake();

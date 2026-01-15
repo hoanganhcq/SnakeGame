@@ -62,7 +62,7 @@ void GameLoop::handleEvents() {
             running = false;
             return;
         }
-    
+    snake->handleInput(event);
 }
 
 

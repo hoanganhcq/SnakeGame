@@ -8,6 +8,16 @@ Snake:: Snake() {
     body.push_back({10, 10, 1, 0});
     body.push_back({9, 10, 1, 0});
     body.push_back({8, 10, 1, 0});
+
+    dirX = 1;
+    dirY = 0;
+    nextDirX = 1;
+    nextDirY = 0;
+
+    delay = 400;
+    moveTimer = 0;
+
+    growing = false;
 }
 
 
@@ -16,19 +26,73 @@ Snake::~Snake() {
 }
 
 
-void Snake::update() {
+void Snake::handleInput(SDL_Event& event) {
+    if (event.type == SDL_KEYDOWN) {
+        switch (event.key.keysym.sym) {
+            case SDLK_UP:
+                if (dirY != 1) {
+                    nextDirX = 0;
+                    nextDirY = -1;
+                }
+                break;
+            case SDLK_DOWN:
+                if (dirY != -1) {
+                    nextDirX = 0;
+                    nextDirY = 1;
+                }
+                break;
+            case SDLK_LEFT:
+                if (dirX != 1) {
+                    nextDirX = -1;
+                    nextDirY = 0;
+                }
+                break;
+            case SDLK_RIGHT:
+                if (dirX != -1) {
+                    nextDirX = 1;
+                    nextDirY = 0;
+                }
+                break;
+        }
+    }
+}
 
+
+void Snake::update() {
+    moveTimer++;
+    if (moveTimer < delay) return;
+    moveTimer = 0;
+
+    dirX = nextDirX;
+    dirY = nextDirY;
+
+    int newX = body.front().x + dirX;
+    int newY = body.front().y + dirY;
+
+    SnakeSegment newHead = {newX, newY, dirX, dirY};
+    body.push_front(newHead);
+
+    if (!growing) {
+        body.pop_back();
+    } else {
+        growing = false;
+    }
+}
+
+
+void Snake::grow() {
+    growing = true;
 }
 
 
 void Snake::render(SDL_Renderer* renderer) {
-    SDL_Rect segmentDest = {0, 0, 32, 32};
+    SDL_Rect segmentDest = {0, 0, SEGMENT_SIZE, SEGMENT_SIZE};
 
     for (size_t i = 0; i < body.size(); i++) {
         SnakeSegment& seg = body[i];
 
-        segmentDest.x = seg.x * 32;
-        segmentDest.y = seg.y * 32;
+        segmentDest.x = seg.x * SEGMENT_SIZE;
+        segmentDest.y = seg.y * SEGMENT_SIZE;
 
         double angle = 0;
         if (seg.dirX == -1) angle = 180;
