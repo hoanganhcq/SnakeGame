@@ -1,6 +1,7 @@
 #pragma once
 #include "textureManager.h"
 #include "snake.h"
+#include "food.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -27,6 +28,7 @@ private:
     bool running;
 
     Snake* snake;
+    Food* food;
 public:
     GameLoop();
 

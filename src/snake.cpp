@@ -8,13 +8,14 @@ Snake:: Snake() {
     body.push_back({10, 10, 1, 0});
     body.push_back({9, 10, 1, 0});
     body.push_back({8, 10, 1, 0});
+    body.push_back({7, 10, 1, 0});
 
     dirX = 1;
     dirY = 0;
     nextDirX = 1;
     nextDirY = 0;
 
-    delay = 400;
+    delay = 360;
     moveTimer = 0;
 
     growing = false;
@@ -66,10 +67,10 @@ void Snake::update() {
     dirX = nextDirX;
     dirY = nextDirY;
 
-    int newX = body.front().x + dirX;
-    int newY = body.front().y + dirY;
+    int newCol = body.front().col_x + dirX;
+    int newRow = body.front().row_y + dirY;
 
-    SnakeSegment newHead = {newX, newY, dirX, dirY};
+    SnakeSegment newHead = {newCol, newRow, dirX, dirY};
     body.push_front(newHead);
 
     if (!growing) {
@@ -86,13 +87,13 @@ void Snake::grow() {
 
 
 void Snake::render(SDL_Renderer* renderer) {
-    SDL_Rect segmentDest = {0, 0, SEGMENT_SIZE, SEGMENT_SIZE};
+    SDL_Rect segmentDest = {0, 0, GRID_SIZE, GRID_SIZE};
 
     for (size_t i = 0; i < body.size(); i++) {
         SnakeSegment& seg = body[i];
 
-        segmentDest.x = seg.x * SEGMENT_SIZE;
-        segmentDest.y = seg.y * SEGMENT_SIZE;
+        segmentDest.x = seg.col_x * GRID_SIZE;
+        segmentDest.y = seg.row_y * GRID_SIZE;
 
         double angle = 0;
         if (seg.dirX == -1) angle = 180;
@@ -103,4 +104,19 @@ void Snake::render(SDL_Renderer* renderer) {
 
         SDL_RenderCopyEx(renderer, currentTexture, NULL, &segmentDest, angle, NULL, SDL_FLIP_NONE);
     }
+}
+
+
+std::deque<SnakeSegment> Snake::getBody() {
+    return body;
+}
+
+
+int Snake::getHeadCol() {
+    return body.front().col_x;
+}
+
+
+int Snake::getHeadRow() {
+    return body.front().row_y;
 }

@@ -1,4 +1,5 @@
 #include "gameLoop.h"
+#include "collision.h"
 #include <iostream>
 
 GameLoop::GameLoop() {
@@ -6,7 +7,8 @@ GameLoop::GameLoop() {
     renderer = NULL;
     running = false;
 
-
+    snake = NULL;
+    food = NULL;
 }
 
 bool GameLoop::initialize() {
@@ -51,6 +53,9 @@ bool GameLoop::initialize() {
 
     snake = new Snake();
 
+    food = new Food();
+    food->respawn(WIDTH, HEIGHT);
+
     running = true;
     return true;
 }
@@ -58,16 +63,28 @@ bool GameLoop::initialize() {
 
 void GameLoop::handleEvents() {
     SDL_PollEvent(&event);
-        if (event.type == SDL_QUIT) {
-            running = false;
-            return;
-        }
+    if (event.type == SDL_QUIT) {
+        running = false;
+        return;
+    }
+    
     snake->handleInput(event);
 }
 
 
 void GameLoop::update() {
     snake->update();
+
+    if (Collision::check(snake, food)) {
+        std::cout << "Yummy!\n";
+        snake->grow();
+        food->respawn(WIDTH, HEIGHT);
+    }
+
+    if (Collision::checkSelf(snake)) {
+        std::cout << "Game Over: Bitting tail!\n";
+        running = false;
+    }
 }
 
 
@@ -77,6 +94,7 @@ void GameLoop::render() {
     SDL_RenderClear(renderer);
 
     if (snake) snake->render(renderer);
+    if (food) food->render(renderer);
 
     SDL_RenderPresent(renderer);
 }

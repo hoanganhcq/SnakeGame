@@ -3,14 +3,14 @@
 #include <deque>
 
 struct SnakeSegment {
-    int x, y;
+    int col_x, row_y;
     int dirX, dirY;
 };
 
 
 class Snake : public Object {
 private:
-    const int SEGMENT_SIZE = 20;
+    const int GRID_SIZE = 20;
     std::deque<SnakeSegment> body;
     
     SDL_Texture* headTexture;
@@ -30,4 +30,8 @@ public:
 
     void handleInput(SDL_Event& event);
     void grow();
+
+    std::deque<SnakeSegment> getBody();
+    int getHeadCol();
+    int getHeadRow();
 };
