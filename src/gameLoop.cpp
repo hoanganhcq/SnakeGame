@@ -48,6 +48,9 @@ bool GameLoop::initialize() {
         return false;
     }
 
+
+    snake = new Snake();
+
     running = true;
     return true;
 }
@@ -64,15 +67,16 @@ void GameLoop::handleEvents() {
 
 
 void GameLoop::update() {
-
+    snake->update();
 }
 
 
 void GameLoop::render() {
     // Clear Screen
-    SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
+    if (snake) snake->render(renderer);
 
     SDL_RenderPresent(renderer);
 }
@@ -83,6 +87,11 @@ bool GameLoop::isRunning() {
 }
 
 void GameLoop::clean() {
+
+    if (snake) {
+        delete snake;
+        snake = NULL;
+    }
 
     TextureManager::Instance()->clean();
 

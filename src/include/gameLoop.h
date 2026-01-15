@@ -1,5 +1,6 @@
 #pragma once
 #include "textureManager.h"
+#include "snake.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -24,6 +25,8 @@ private:
     SDL_Event event = {};
 
     bool running;
+
+    Snake* snake;
 public:
     GameLoop();
 

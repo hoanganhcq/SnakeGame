@@ -1,1 +1,3 @@
-char_snake_head	assets/image/snake_d.png
+snake_head	assets/image/snake_head.png
+snake_body  assets/image/snake_body.png
+snake_tail  assets/imgage/snake_tail.png
