@@ -5,3 +5,4 @@ snake_tail  assets/imgage/snake_tail.png
 food    assets/image/food.png
 
 terrain_wall    assets/image/terrain_wall.png
+terrain_background  assets/image/terrain_background.png

@@ -1,7 +1,8 @@
 #include "terrain.h"
 
 Terrain::Terrain() {
-    texture = TextureManager::Instance()->getTexture("terrain_wall");
+    wall_texture = TextureManager::Instance()->getTexture("terrain_wall");
+    bg_texture = TextureManager::Instance()->getTexture("terrain_background");
     loadTerrain("assets/data/terrain.txt", 30, 30);
 
     startCol = 0;
@@ -9,8 +10,8 @@ Terrain::Terrain() {
 
     src.x = 0;
     src.y = 0;
-    if (texture != NULL) {
-        SDL_QueryTexture(texture, NULL, NULL, &src.w, & src.h);
+    if (wall_texture != NULL) {
+        SDL_QueryTexture(wall_texture, NULL, NULL, &src.w, & src.h);
     } else {
         src.w = 32;
         src.h = 32;
@@ -52,11 +53,15 @@ void Terrain::loadTerrain(std::string path, int rows, int cols) {
 void Terrain::render(SDL_Renderer* renderer) {
     for (int row = 0; row < (int)mapData.size(); row++) {
         for (int col = 0; col < (int)mapData[row].size(); col++) {
-            if (mapData[row][col] == 1) {
-                dest.x = (col + startCol) * GRID_SIZE;
-                dest.y = (row + startRow) * GRID_SIZE;
-
-                SDL_RenderCopy(renderer, texture, &src, &dest);
+            dest.x = (col + startCol) * GRID_SIZE;
+            dest.y = (row + startRow) * GRID_SIZE;
+            switch (mapData[row][col]) {
+                case 0:
+                    SDL_RenderCopy(renderer, bg_texture, &src, &dest);
+                    break;
+                case 1:
+                    SDL_RenderCopy(renderer, wall_texture, &src, &dest);
+                    break;
             }
         }
     }

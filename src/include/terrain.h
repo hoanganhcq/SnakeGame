@@ -6,7 +6,8 @@
 
 class Terrain {
 private:
-    SDL_Texture* texture;
+    SDL_Texture* wall_texture;
+    SDL_Texture* bg_texture;
     SDL_Rect src, dest;
 
     std::vector<std::vector<int>> mapData;
