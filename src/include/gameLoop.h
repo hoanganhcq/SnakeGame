@@ -5,6 +5,7 @@
 #include "terrain.h"
 #include "hud.h"
 #include "gameData.h"
+#include "menu.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -40,6 +41,7 @@ private:
     std::string playerName;
 
     TTF_Font* globalFont;
+    Menu* menu;
     
 public:
     GameLoop();

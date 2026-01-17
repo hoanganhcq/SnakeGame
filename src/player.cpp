@@ -8,7 +8,7 @@ Player::Player(std::string name, int score) {
 
 
 Player::Player() {
-    name = "unknow";
+    name = "unknown";
     score = 0;
 }
 

@@ -1,14 +1,7 @@
 #include "hud.h"
 
-HUD::HUD() {
-    if (TTF_Init() == - 1) {
-        std::cout << "TTF_Init Error: " << TTF_GetError() << std::endl;
-    }
-
-    font = TTF_OpenFont("assets/font/PressStart2P-Regular.ttf", 18);
-    if (!font) {
-        std::cout << "Failed to load font! Error: " << TTF_GetError() << std::endl;
-    }
+HUD::HUD(TTF_Font* globalFont) {
+    font = globalFont;
 
     textColor = { 255, 255, 255, 255}; // white
     

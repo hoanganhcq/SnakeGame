@@ -14,6 +14,7 @@ GameLoop::GameLoop() {
     hud = NULL;
     player = NULL;
     globalFont = NULL;
+    menu = NULL;
 }
 
 bool GameLoop::initialize() {
@@ -41,7 +42,6 @@ bool GameLoop::initialize() {
         return false;
     }
     
-    SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
 
     // Load all Images
     int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
@@ -55,7 +55,16 @@ bool GameLoop::initialize() {
         return false;
     }
 
+
+    if (TTF_Init() == - 1) {
+        std::cout << "TTF_Init Error: " << TTF_GetError() << std::endl;
+    }
+
     globalFont = TTF_OpenFont("assets/font/PressStart2P-Regular.ttf", 18);
+    if (globalFont == NULL) {
+    std::cout << "Failed to load globalFont! Error: " << TTF_GetError() << std::endl;
+    // return false;
+}
 
     terrain = new Terrain();
 
@@ -63,14 +72,17 @@ bool GameLoop::initialize() {
 
     gameData = new GameData();
 
-    hud = new HUD();
+    hud = new HUD(globalFont);
 
     food = new Food();
     food->respawn(terrain, snake);
 
     player = new Player("Guest", 0);
 
+    menu = new Menu(renderer, WIDTH, HEIGHT, globalFont);
+
     currentState = GameState::MENU;
+
     running = true;
     return true;
 }
@@ -84,13 +96,23 @@ void GameLoop::handleEvents() {
     }
     
     switch (currentState) {
-        case GameState::MENU:
+        case GameState::MENU: {
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_RETURN) { // Press ENTER
                     currentState = GameState::PLAYING;
                 }
             }
+
+            int action = menu->handleEvent(&event);
+            if (action == 1) { // Start Game
+                currentState = GameState::PLAYING;
+            } 
+            else if (action == 2) { // Exit
+                running = false;
+            }
+
             break;
+        }
         case GameState::PLAYING:
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_p) {
@@ -161,11 +183,20 @@ void GameLoop::render() {
 
     switch (currentState) {
     case GameState::MENU:
+        SDL_RenderClear(renderer);
+        menu->render(renderer);
         break;
     case GameState::PLAYING:
         break;
-    case GameState::PAUSE:
+    case GameState::PAUSE: 
+    {
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+        SDL_Rect fullscreen_rect = { 0, 0, WIDTH, HEIGHT };
+        SDL_RenderFillRect(renderer, &fullscreen_rect);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
         break;
+    }
     case GameState::GAME_OVER:
         break;
     }
@@ -219,6 +250,11 @@ void GameLoop::clean() {
     if (player) {
         delete player;
         player = NULL;
+    }
+
+    if (menu) {
+        delete menu;
+        menu = NULL;
     }
 
     TextureManager::Instance()->clean();

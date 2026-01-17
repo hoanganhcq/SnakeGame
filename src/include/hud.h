@@ -20,7 +20,7 @@ private:
     
     void loadText(SDL_Renderer* renderer, int value, bool isBest); // load texture from string
 public:
-    HUD();
+    HUD(TTF_Font* globalFont);
     ~HUD();
 
     void update(int score, int bestScore, SDL_Renderer* renderer);
