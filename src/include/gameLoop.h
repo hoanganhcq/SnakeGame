@@ -7,6 +7,7 @@
 #include "gameData.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 
 enum class GameState {
@@ -36,6 +37,9 @@ private:
     GameData* gameData;
     HUD* hud;
     Player* player;
+    std::string playerName;
+
+    TTF_Font* globalFont;
     
 public:
     GameLoop();
@@ -44,6 +48,8 @@ public:
     void handleEvents();
     void update();
     void render();
+
+    void reset();
 
     bool isRunning();
     void clean();

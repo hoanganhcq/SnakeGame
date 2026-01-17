@@ -13,6 +13,7 @@ GameLoop::GameLoop() {
     gameData = NULL;
     hud = NULL;
     player = NULL;
+    globalFont = NULL;
 }
 
 bool GameLoop::initialize() {
@@ -54,6 +55,8 @@ bool GameLoop::initialize() {
         return false;
     }
 
+    globalFont = TTF_OpenFont("assets/font/PressStart2P-Regular.ttf", 18);
+
     terrain = new Terrain();
 
     snake = new Snake();
@@ -67,7 +70,7 @@ bool GameLoop::initialize() {
 
     player = new Player("Guest", 0);
 
-
+    currentState = GameState::MENU;
     running = true;
     return true;
 }
@@ -80,15 +83,49 @@ void GameLoop::handleEvents() {
         return;
     }
     
-    snake->handleInput(event);
+    switch (currentState) {
+        case GameState::MENU:
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_RETURN) { // Press ENTER
+                    currentState = GameState::PLAYING;
+                }
+            }
+            break;
+        case GameState::PLAYING:
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_p) {
+                    currentState = GameState::PAUSE;
+                }
+                snake->handleInput(event);
+            }
+            break;
+        case GameState::PAUSE:
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_p || event.key.keysym.sym == SDLK_RETURN) {
+                    currentState = GameState::PLAYING;
+                }
+            }
+            break;
+        case GameState::GAME_OVER:
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_r || event.key.keysym.sym == SDLK_RETURN) {
+                    reset();
+                    currentState = GameState::PLAYING;
+                }
+            }
+            break;
+    }
+
 }
 
 
 void GameLoop::update() {
+
+    if (currentState != GameState::PLAYING) return;
+
     snake->update();
 
     if (Collision::check(snake, food)) {
-        std::cout << "Yummy!\n";
         snake->grow();
         food->respawn(terrain, snake);
         player->setScore(player->getScore() + 10);
@@ -96,12 +133,12 @@ void GameLoop::update() {
 
     if (Collision::checkSelf(snake)) {
         std::cout << "Game Over: Bitting tail!\n";
-        running = false;
+        currentState = GameState::GAME_OVER;
     }
 
     if (Collision::checkTerrain(snake, terrain)) {
         std::cout << "Game Over\n";
-        running = false;
+        currentState = GameState::GAME_OVER;
     }
 
     if (player->getScore() > gameData->getBestScore()) {
@@ -122,7 +159,32 @@ void GameLoop::render() {
     if (food) food->render(renderer);
     if (hud) hud->render(renderer);
 
+    switch (currentState) {
+    case GameState::MENU:
+        break;
+    case GameState::PLAYING:
+        break;
+    case GameState::PAUSE:
+        break;
+    case GameState::GAME_OVER:
+        break;
+    }
+
     SDL_RenderPresent(renderer);
+}
+
+
+void GameLoop::reset() {
+    delete snake;
+    delete food;
+    delete player;
+
+    snake = new Snake();
+    food = new Food();
+    player = new Player(playerName, 0);
+
+    food->respawn(terrain, snake);
+    std::cout << "Replay" << std::endl;
 }
 
 
@@ -131,6 +193,8 @@ bool GameLoop::isRunning() {
 }
 
 void GameLoop::clean() {
+
+    if (globalFont) TTF_CloseFont(globalFont);
 
     if (snake) {
         delete snake;
