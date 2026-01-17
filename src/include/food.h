@@ -1,5 +1,7 @@
 #pragma once
 #include "object.h"
+#include "terrain.h"
+#include "snake.h"
 #include <cstdlib>
 #include <ctime>
 
@@ -12,7 +14,7 @@ public:
     Food();
     ~Food();
 
-    void respawn(int screenWidth, int screenHeight);
+    void respawn(Terrain* pTerrain, Snake* pSnake);
 
     void render(SDL_Renderer* renderer) override;
 

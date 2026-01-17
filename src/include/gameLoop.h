@@ -2,6 +2,7 @@
 #include "textureManager.h"
 #include "snake.h"
 #include "food.h"
+#include "terrain.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -16,8 +17,8 @@ enum class GameState {
 
 class GameLoop {
 private:
-    const int WIDTH = 800;
-    const int HEIGHT = 600;
+    const int WIDTH = 600;
+    const int HEIGHT = 720;
 
     GameState currentState = GameState::PLAYING; // init in MENU then
 
@@ -29,6 +30,7 @@ private:
 
     Snake* snake;
     Food* food;
+    Terrain* terrain;
 public:
     GameLoop();
 

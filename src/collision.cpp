@@ -26,3 +26,23 @@ bool Collision::checkSelf(Snake* pSnake) {
 
     return false;
 }
+
+
+bool Collision::checkTerrain(Snake* pSnake, Terrain* pTerrain) {
+    int head_col = pSnake->getHeadCol();
+    int head_row = pSnake->getHeadRow();
+
+    if (pTerrain->getTile(head_row, head_col) == 1) return true;
+
+    return false;
+}
+
+
+bool Collision::checkTerrain(Food* pFood, Terrain* pTerrain) {
+    int food_col = pFood->getCol();
+    int food_row = pFood->getRow();
+
+    if (pTerrain->getTile(food_row, food_col) == 1) return true;
+
+    return false;
+}

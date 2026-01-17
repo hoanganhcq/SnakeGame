@@ -3,3 +3,5 @@ snake_body  assets/image/snake_body.png
 snake_tail  assets/imgage/snake_tail.png
 
 food    assets/image/food.png
+
+terrain_wall    assets/image/terrain_wall.png

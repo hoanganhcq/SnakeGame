@@ -15,12 +15,43 @@ Food::~Food() {
 }
 
 
-void Food::respawn(int screenWidth, int screenHeight) {
-    int maxCols = screenWidth / GRID_SIZE;
-    int maxRows = screenHeight / GRID_SIZE;
+void Food::respawn(Terrain* pTerrain, Snake* pSnake) {
+    if (!pTerrain || !pSnake) return;
 
-    col_x = rand() % maxCols; // 0 -> (max - 1)
-    row_y = rand() % maxRows;
+    bool validPosition = false;
+
+    int mapCols = pTerrain->getCols();
+    int mapRows = pTerrain->getRows();
+    int offX = pTerrain->getStartCol();
+    int offY = pTerrain->getStartRow();
+
+    while (!validPosition) {
+        int randCol = rand() % mapCols;
+        int randRow = rand() % mapRows;
+
+        col_x = offX + randCol;
+        row_y = offY + randRow;
+
+        if (pTerrain->getTile(row_y, col_x) == 1) continue;
+
+        bool onSnake = false;
+        const std::deque<SnakeSegment> body = pSnake->getBody();
+
+        if ((int)body.size() >= mapCols * mapRows) return;
+
+        for (const auto& segment : body) {
+            if (segment.col_x == col_x && segment.row_y == row_y) {
+                onSnake = true;
+                break;
+            }
+        }
+
+        if (onSnake) {
+            continue;
+        }
+
+        validPosition = true;
+    }
 }
 
 
