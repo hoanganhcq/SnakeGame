@@ -10,6 +10,7 @@ GameLoop::GameLoop() {
     snake = NULL;
     food = NULL;
     terrain = NULL;
+    hud = NULL;
 }
 
 bool GameLoop::initialize() {
@@ -55,6 +56,8 @@ bool GameLoop::initialize() {
 
     snake = new Snake();
 
+    hud = new HUD();
+
     food = new Food();
     food->respawn(terrain, snake);
 
@@ -82,6 +85,7 @@ void GameLoop::update() {
         std::cout << "Yummy!\n";
         snake->grow();
         food->respawn(terrain, snake);
+        score += 10;
     }
 
     if (Collision::checkSelf(snake)) {
@@ -93,6 +97,8 @@ void GameLoop::update() {
         std::cout << "Game Over\n";
         running = false;
     }
+
+    hud->update(score, 0, renderer);
 }
 
 
@@ -104,6 +110,7 @@ void GameLoop::render() {
     if (terrain) terrain->render(renderer);
     if (snake) snake->render(renderer);
     if (food) food->render(renderer);
+    if (hud) hud->render(renderer);
 
     SDL_RenderPresent(renderer);
 }
@@ -123,6 +130,11 @@ void GameLoop::clean() {
     if (terrain) {
         delete terrain;
         terrain = NULL;
+    }
+
+    if (hud) {
+        delete hud;
+        hud = NULL;
     }
 
     TextureManager::Instance()->clean();

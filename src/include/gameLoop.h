@@ -3,6 +3,7 @@
 #include "snake.h"
 #include "food.h"
 #include "terrain.h"
+#include "hud.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -31,6 +32,8 @@ private:
     Snake* snake;
     Food* food;
     Terrain* terrain;
+    HUD* hud;
+    int score = 0;
 public:
     GameLoop();
 
