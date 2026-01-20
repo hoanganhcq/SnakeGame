@@ -34,14 +34,14 @@ void HUD::loadText(SDL_Renderer* renderer, int value, bool isBest) {
         bestScoreRect.w = textSurface->w;
         bestScoreRect.h = textSurface->h;
         bestScoreRect.x = 240;
-        bestScoreRect.y = 10;
+        bestScoreRect.y = 20;
     } else {
         if (scoreTexture) SDL_DestroyTexture(scoreTexture);
         scoreTexture = newTexture;
         scoreRect.w = textSurface->w;
         scoreRect.h = textSurface->h;
         scoreRect.x = 20;
-        scoreRect.y = 10;
+        scoreRect.y = 20;
     }
     SDL_FreeSurface(textSurface);
 }

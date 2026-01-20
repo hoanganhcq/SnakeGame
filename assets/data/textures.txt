@@ -6,3 +6,5 @@ food    assets/image/food.png
 
 terrain_wall    assets/image/terrain_wall.png
 terrain_background  assets/image/terrain_background.png
+
+menu_background assets/image/menu_background.png

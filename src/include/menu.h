@@ -3,6 +3,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include "button.h"
+#include "inputBox.h"
+#include "textureManager.h"
 
 class Menu {
 private:
@@ -13,8 +15,12 @@ private:
     Button* startButton;
     Button* exitButton;
 
+    InputBox* inputBox;
+
     SDL_Texture* titleTexture;
     SDL_Rect titleRect;
+
+    SDL_Texture* bg_texture;
 
 public:
     Menu(SDL_Renderer* renderer, int screenWidth, int screenHeight, TTF_Font* globalFont);
@@ -22,5 +28,7 @@ public:
 
     void render(SDL_Renderer* renderer);
     
-    int handleEvent(SDL_Event* e); // 1 (Start), 2 (Exit)
+    int handleEvent(SDL_Event* e, SDL_Renderer* renderer); // 1 (Start), 2 (Exit)
+
+    std::string getPlayerName() const;
 };

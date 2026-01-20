@@ -3,6 +3,7 @@
 Player::Player(std::string name, int score) {
     this->name = name;
     this->score = score;
+    this->saved = false;
 }
 
 
@@ -32,4 +33,16 @@ std::string Player::getName() const {
 
 int Player::getScore() const {
     return score;
+}
+
+
+bool Player::isSaved() const {
+    return saved;
+}
+
+
+void Player::savedPlayer() {
+    if (!saved) {
+        saved = true;
+    }
 }

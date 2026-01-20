@@ -96,15 +96,14 @@ void GameLoop::handleEvents() {
     }
     
     switch (currentState) {
-        case GameState::MENU: {
-            if (event.type == SDL_KEYDOWN) {
-                if (event.key.keysym.sym == SDLK_RETURN) { // Press ENTER
-                    currentState = GameState::PLAYING;
-                }
-            }
-
-            int action = menu->handleEvent(&event);
-            if (action == 1) { // Start Game
+        case GameState::MENU: 
+        {
+            int action = menu->handleEvent(&event, renderer);
+            playerName = menu->getPlayerName();
+            if ((event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) || action == 1) { // Start Game: press ENTER or click Start button
+                if (player) delete player;
+                player = new Player(playerName, 0);
+                std::cout << playerName << " is playing SnakeGame" << std::endl;
                 currentState = GameState::PLAYING;
             } 
             else if (action == 2) { // Exit
@@ -114,6 +113,7 @@ void GameLoop::handleEvents() {
             break;
         }
         case GameState::PLAYING:
+        {
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_p) {
                     currentState = GameState::PAUSE;
@@ -121,14 +121,18 @@ void GameLoop::handleEvents() {
                 snake->handleInput(event);
             }
             break;
+        }
         case GameState::PAUSE:
+        {
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_p || event.key.keysym.sym == SDLK_RETURN) {
                     currentState = GameState::PLAYING;
                 }
             }
             break;
+        }
         case GameState::GAME_OVER:
+        {
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_r || event.key.keysym.sym == SDLK_RETURN) {
                     reset();
@@ -136,6 +140,7 @@ void GameLoop::handleEvents() {
                 }
             }
             break;
+        }
     }
 
 }
@@ -143,31 +148,37 @@ void GameLoop::handleEvents() {
 
 void GameLoop::update() {
 
-    if (currentState != GameState::PLAYING) return;
+    if (currentState == GameState::PLAYING) {
 
-    snake->update();
+        snake->update();
 
-    if (Collision::check(snake, food)) {
-        snake->grow();
-        food->respawn(terrain, snake);
-        player->setScore(player->getScore() + 10);
+        if (Collision::check(snake, food)) {
+            snake->grow();
+            food->respawn(terrain, snake);
+            player->setScore(player->getScore() + 10);
+        }
+
+        if (Collision::checkSelf(snake)) {
+            std::cout << "Game Over: Bitting tail!\n";
+            currentState = GameState::GAME_OVER;
+        }
+
+        if (Collision::checkTerrain(snake, terrain)) {
+            std::cout << "Game Over\n";
+            currentState = GameState::GAME_OVER;
+        }
+
+
+        hud->update(player->getScore(), gameData->getBestScore(), renderer);
     }
 
-    if (Collision::checkSelf(snake)) {
-        std::cout << "Game Over: Bitting tail!\n";
-        currentState = GameState::GAME_OVER;
+    if (currentState == GameState::GAME_OVER) {
+        if (!player->isSaved()) {
+            gameData->updateLeaderBoard(*player);
+            player->savedPlayer();
+            std::cout << "Attempt recorded: " << player->getName() << ", score: " << std::to_string(player->getScore()) << std::endl;
+        }
     }
-
-    if (Collision::checkTerrain(snake, terrain)) {
-        std::cout << "Game Over\n";
-        currentState = GameState::GAME_OVER;
-    }
-
-    if (player->getScore() > gameData->getBestScore()) {
-        gameData->updateLeaderBoard(*player);
-    }
-
-    hud->update(player->getScore(), gameData->getBestScore(), renderer);
 }
 
 
