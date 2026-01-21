@@ -29,31 +29,41 @@ Snake::~Snake() {
 
 void Snake::handleInput(SDL_Event& event) {
     if (event.type == SDL_KEYDOWN) {
+        bool turned = false; // flag to check if the snake change its direction -> make sound
+
         switch (event.key.keysym.sym) {
             case SDLK_UP:
                 if (dirY != 1) {
+                    if (dirY != -1) turned = true;
                     nextDirX = 0;
                     nextDirY = -1;
                 }
                 break;
             case SDLK_DOWN:
                 if (dirY != -1) {
+                    if (dirY != 1) turned = true;
                     nextDirX = 0;
                     nextDirY = 1;
                 }
                 break;
             case SDLK_LEFT:
                 if (dirX != 1) {
+                    if (dirX != -1) turned = true;
                     nextDirX = -1;
                     nextDirY = 0;
                 }
                 break;
             case SDLK_RIGHT:
                 if (dirX != -1) {
+                    if (dirX != 1) turned = true;
                     nextDirX = 1;
                     nextDirY = 0;
                 }
                 break;
+        }
+
+        if (turned) {
+            SoundManager::Instance()->playSFX("turn");
         }
     }
 }

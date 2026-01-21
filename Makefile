@@ -20,7 +20,7 @@
 
 CC = g++
 CFLAGS = -std=c++17 -Wall -I src/include -MMD -MP
-LDFLAGS = -L src/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+LDFLAGS = -L src/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 # Tìm tất cả source
 SOURCES = $(wildcard *.cpp src/*.cpp src/**/*.cpp)

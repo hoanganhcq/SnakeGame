@@ -1,0 +1,3 @@
+eat     sfx     assets/audio/eat.wav
+turn    sfx     assets/audio/turn.wav
+lose    sfx     assets/audio/lose.wav

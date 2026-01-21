@@ -55,6 +55,12 @@ bool GameLoop::initialize() {
         return false;
     }
 
+    // Load Sound Effects
+    if (!SoundManager::Instance()->loadFromList("assets/data/sounds.txt")) {
+        std::cout << "Failed to load sounds!" << std::endl;
+        return false;
+    }
+
 
     if (TTF_Init() == - 1) {
         std::cout << "TTF_Init Error: " << TTF_GetError() << std::endl;
@@ -156,16 +162,19 @@ void GameLoop::update() {
             snake->grow();
             food->respawn(terrain, snake);
             player->setScore(player->getScore() + 10);
+            SoundManager::Instance()->playSFX("eat");
         }
 
         if (Collision::checkSelf(snake)) {
             std::cout << "Game Over: Bitting tail!\n";
             currentState = GameState::GAME_OVER;
+            SoundManager::Instance()->playSFX("lose");
         }
 
         if (Collision::checkTerrain(snake, terrain)) {
             std::cout << "Game Over\n";
             currentState = GameState::GAME_OVER;
+            SoundManager::Instance()->playSFX("lose");
         }
 
 

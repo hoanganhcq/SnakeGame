@@ -1,5 +1,6 @@
 #pragma once
 #include "object.h"
+#include "soundManager.h"
 #include <deque>
 
 struct SnakeSegment {
