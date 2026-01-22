@@ -7,7 +7,7 @@
 class Button {
 private:
     SDL_Rect rect;         
-    SDL_Texture* texture;  
+    SDL_Texture* textTexture;  
     SDL_Rect textRect;      
     
     SDL_Color textNormalColor; 
@@ -19,8 +19,15 @@ private:
     bool isHovered;
     int paddingX = 20; 
     int paddingY = 10;
+
+    // Button with Image
+    SDL_Texture* normalTexture;
+    SDL_Texture* hoverTexture;
+    bool useImage;
 public:
     Button(SDL_Renderer* renderer, TTF_Font* font, std::string text, int x, int y);
+    Button(SDL_Renderer* renderer, SDL_Texture* normal, SDL_Texture* hover, int x, int y, int w = 0, int h = 0);
+
     Button();
     ~Button();
 

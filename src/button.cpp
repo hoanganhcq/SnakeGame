@@ -1,6 +1,10 @@
 #include "button.h"
 
+// Create Button by Text
 Button::Button(SDL_Renderer* renderer, TTF_Font* font, std::string text, int x, int y) {
+    useImage = false;
+    normalTexture = NULL;
+    hoverTexture = NULL;
     // Color settings
     textNormalColor = {255, 255, 255, 255}; // white
     textHoverColor = {255, 255, 0, 255};    // yellow
@@ -12,7 +16,7 @@ Button::Button(SDL_Renderer* renderer, TTF_Font* font, std::string text, int x, 
 
     // Create the text surface first to get the dimensions
     SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), textNormalColor);
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    textTexture = SDL_CreateTextureFromSurface(renderer, surface);
 
     rect.x = x;
     rect.y = y;
@@ -29,36 +33,70 @@ Button::Button(SDL_Renderer* renderer, TTF_Font* font, std::string text, int x, 
 }
 
 
+// Create Button by Image
+Button::Button(SDL_Renderer* renderer, SDL_Texture* normal, SDL_Texture* hover, int x, int y, int w, int h) {
+    useImage = true;
+    normalTexture = normal;
+    hoverTexture = hover;
+    textTexture = NULL;
+    isHovered = false;
+
+    rect.x = x;
+    rect.y = y;
+
+    if (w > 0 && h > 0) {
+        rect.w = w;
+        rect.h = h;
+    } else {
+        int imgW, imgH;
+        SDL_QueryTexture(normalTexture, NULL, NULL, &imgW, &imgH);
+        rect.w = imgW;
+        rect.h = imgH;
+    }
+
+}
+
+
 Button::Button() {
 }
 
 
 Button::~Button() {
-    if (texture) SDL_DestroyTexture(texture);
+    if (textTexture) SDL_DestroyTexture(textTexture);
+    if (normalTexture) SDL_DestroyTexture(normalTexture);
+    if (hoverTexture) SDL_DestroyTexture(hoverTexture);
 }
 
 
 void Button::render(SDL_Renderer* renderer) {
-    // Draw the Background first
-    if (isHovered) {
-        SDL_SetRenderDrawColor(renderer, bgHoverColor.r, bgHoverColor.g, bgHoverColor.b, bgHoverColor.a);
+    if (useImage) {
+        SDL_Texture* currentTexture = isHovered ? hoverTexture : normalTexture;
+        if (currentTexture) {
+            SDL_RenderCopy(renderer, currentTexture, NULL, &rect);
+        }
     } else {
-        SDL_SetRenderDrawColor(renderer, bgNormalColor.r, bgNormalColor.g, bgNormalColor.b, bgNormalColor.a);
-    }
-    SDL_RenderFillRect(renderer, &rect);
+        // Draw the Background first
+        if (isHovered) {
+            SDL_SetRenderDrawColor(renderer, bgHoverColor.r, bgHoverColor.g, bgHoverColor.b, bgHoverColor.a);
+        } else {
+            SDL_SetRenderDrawColor(renderer, bgNormalColor.r, bgNormalColor.g, bgNormalColor.b, bgNormalColor.a);
+        }
+        SDL_RenderFillRect(renderer, &rect);
 
-    // Bordering
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
-    SDL_RenderDrawRect(renderer, &rect);
+        // Bordering
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
+        SDL_RenderDrawRect(renderer, &rect);
 
-    // Draw Text
-    if (isHovered) {
-        SDL_SetTextureColorMod(texture, textHoverColor.r, textHoverColor.g, textHoverColor.b);
-    } else {
-        SDL_SetTextureColorMod(texture, textNormalColor.r, textNormalColor.g, textNormalColor.b);
+        // Draw Text
+        if (textTexture) {
+            if (isHovered) {
+                SDL_SetTextureColorMod(textTexture, textHoverColor.r, textHoverColor.g, textHoverColor.b);
+            } else {
+                SDL_SetTextureColorMod(textTexture, textNormalColor.r, textNormalColor.g, textNormalColor.b);
+            }
+            SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+        }  
     }
-    
-    SDL_RenderCopy(renderer, texture, NULL, &textRect);
 }
 
 
@@ -87,6 +125,8 @@ void Button::setPosition(int x, int y) {
     rect.x = x;
     rect.y = y;
 
-    textRect.x = rect.x + paddingX;
-    textRect.y = rect.y + paddingY;
+    if (!useImage) {
+        textRect.x = rect.x + paddingX;
+        textRect.y = rect.y + paddingY;
+    }
 }

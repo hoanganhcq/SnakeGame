@@ -9,6 +9,8 @@ HUD::HUD(TTF_Font* globalFont) {
     bestScoreTexture = NULL;
     currentScore = -1;
     currentBestScore = -1;
+    backgroundTexture = TextureManager::Instance()->getTexture("hud_background");
+    hudRect = { 0, 0, 600, 120};
 }
 
 
@@ -68,6 +70,7 @@ void HUD::update(int score, int bestScore, SDL_Renderer* renderer) {
 
 
 void HUD::render(SDL_Renderer* renderer) {
+    if (backgroundTexture) SDL_RenderCopy(renderer, backgroundTexture, NULL, &hudRect);
     if (scoreTexture) SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreRect);
     if (bestScoreTexture) SDL_RenderCopy(renderer, bestScoreTexture, NULL, &bestScoreRect);
 }

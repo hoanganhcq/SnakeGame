@@ -15,6 +15,7 @@ GameLoop::GameLoop() {
     player = NULL;
     globalFont = NULL;
     menu = NULL;
+    pauseButton = NULL;
 }
 
 bool GameLoop::initialize() {
@@ -68,9 +69,9 @@ bool GameLoop::initialize() {
 
     globalFont = TTF_OpenFont("assets/font/PressStart2P-Regular.ttf", 18);
     if (globalFont == NULL) {
-    std::cout << "Failed to load globalFont! Error: " << TTF_GetError() << std::endl;
-    // return false;
-}
+        std::cout << "Failed to load globalFont! Error: " << TTF_GetError() << std::endl;
+        return false;
+    }
 
     terrain = new Terrain();
 
@@ -86,6 +87,13 @@ bool GameLoop::initialize() {
     player = new Player("Guest", 0);
 
     menu = new Menu(renderer, WIDTH, HEIGHT, globalFont);
+
+    pauseButton = new Button(renderer, 
+                            TextureManager::Instance()->getTexture("btn_pause"),
+                            TextureManager::Instance()->getTexture("btn_pause_hover"), 
+                            WIDTH, 0, 45, 45
+    );
+
 
     currentState = GameState::MENU;
 
@@ -120,6 +128,10 @@ void GameLoop::handleEvents() {
         }
         case GameState::PLAYING:
         {
+            if (pauseButton->handleEvent(&event)) {
+                currentState = GameState::PAUSE;
+            }
+
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_p) {
                     currentState = GameState::PAUSE;
@@ -177,7 +189,7 @@ void GameLoop::update() {
             SoundManager::Instance()->playSFX("lose");
         }
 
-
+        pauseButton->setPosition(WIDTH - 70, 25);
         hud->update(player->getScore(), gameData->getBestScore(), renderer);
     }
 
@@ -207,6 +219,7 @@ void GameLoop::render() {
         menu->render(renderer);
         break;
     case GameState::PLAYING:
+        if (pauseButton) pauseButton->render(renderer);
         break;
     case GameState::PAUSE: 
     {
@@ -275,6 +288,11 @@ void GameLoop::clean() {
     if (menu) {
         delete menu;
         menu = NULL;
+    }
+
+    if (pauseButton) {
+        delete pauseButton;
+        pauseButton = NULL;
     }
 
     TextureManager::Instance()->clean();

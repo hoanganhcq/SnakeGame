@@ -1,10 +1,14 @@
-snake_head	assets/image/snake_head.png
-snake_body  assets/image/snake_body.png
-snake_tail  assets/imgage/snake_tail.png
+snake_head	        assets/image/snake_head.png
+snake_body          assets/image/snake_body.png
+snake_tail          assets/imgage/snake_tail.png
 
-food    assets/image/food.png
+food                assets/image/food.png
 
-terrain_wall    assets/image/terrain_wall.png
+terrain_wall        assets/image/terrain_wall.png
 terrain_background  assets/image/terrain_background.png
 
-menu_background assets/image/menu_background.png
+menu_background     assets/image/menu_background.png
+hud_background      assets/image/hud_bg.png
+
+btn_pause           assets/image/btn_pause.png
+btn_pause_hover     assets/image/btn_pause_hover.png

@@ -25,7 +25,7 @@ private:
     const int WIDTH = 600;
     const int HEIGHT = 720;
 
-    GameState currentState = GameState::PLAYING; // init in MENU then
+    GameState currentState;
 
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
@@ -44,6 +44,7 @@ private:
     TTF_Font* globalFont;
     Menu* menu;
     
+    Button* pauseButton;
 public:
     GameLoop();
 

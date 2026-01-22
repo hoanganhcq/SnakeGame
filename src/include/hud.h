@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include "textureManager.h"
 #include <string>
 #include <iostream>
 
@@ -14,6 +15,9 @@ private:
 
     SDL_Texture* bestScoreTexture;
     SDL_Rect bestScoreRect;
+
+    SDL_Texture* backgroundTexture;
+    SDL_Rect hudRect;
 
     int currentScore;
     int currentBestScore;
