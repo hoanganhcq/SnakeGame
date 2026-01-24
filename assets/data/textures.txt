@@ -1,6 +1,6 @@
 snake_head	        assets/image/snake_head.png
 snake_body          assets/image/snake_body.png
-snake_tail          assets/imgage/snake_tail.png
+snake_tail          assets/image/snake_tail.png
 
 food                assets/image/food.png
 
@@ -12,3 +12,7 @@ hud_background      assets/image/hud_bg.png
 
 btn_pause           assets/image/btn_pause.png
 btn_pause_hover     assets/image/btn_pause_hover.png
+btn_home            assets/image/btn_home.png
+btn_home_hover      assets/image/btn_home_hover.png
+btn_resume          assets/image/btn_resume.png
+btn_resume_hover    assets/image/btn_resume_hover.png

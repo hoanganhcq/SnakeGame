@@ -16,6 +16,8 @@ GameLoop::GameLoop() {
     globalFont = NULL;
     menu = NULL;
     pauseButton = NULL;
+    homeButton = NULL;
+    resumeButton = NULL;
 }
 
 bool GameLoop::initialize() {
@@ -91,7 +93,19 @@ bool GameLoop::initialize() {
     pauseButton = new Button(renderer, 
                             TextureManager::Instance()->getTexture("btn_pause"),
                             TextureManager::Instance()->getTexture("btn_pause_hover"), 
-                            WIDTH, 0, 45, 45
+                            WIDTH - 70, 25, 45, 45
+    );
+
+    homeButton = new Button(renderer,
+                            TextureManager::Instance()->getTexture("btn_home"),
+                            TextureManager::Instance()->getTexture("btn_home_hover"),
+                            WIDTH / 2 - 75, HEIGHT / 2 + 40, 45, 45
+    );
+
+    resumeButton = new Button(renderer,
+                            TextureManager::Instance()->getTexture("btn_resume"),
+                            TextureManager::Instance()->getTexture("btn_resume_hover"),
+                            WIDTH / 2 + 30, HEIGHT / 2 + 40, 45, 45              
     );
 
 
@@ -142,6 +156,15 @@ void GameLoop::handleEvents() {
         }
         case GameState::PAUSE:
         {
+            if (homeButton->handleEvent(&event)) {
+                currentState = GameState::MENU;
+                reset();
+            }
+
+            if (resumeButton->handleEvent(&event)) {
+                currentState = GameState::PLAYING;
+            }
+
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_p || event.key.keysym.sym == SDLK_RETURN) {
                     currentState = GameState::PLAYING;
@@ -189,7 +212,6 @@ void GameLoop::update() {
             SoundManager::Instance()->playSFX("lose");
         }
 
-        pauseButton->setPosition(WIDTH - 70, 25);
         hud->update(player->getScore(), gameData->getBestScore(), renderer);
     }
 
@@ -228,6 +250,8 @@ void GameLoop::render() {
         SDL_Rect fullscreen_rect = { 0, 0, WIDTH, HEIGHT };
         SDL_RenderFillRect(renderer, &fullscreen_rect);
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+        homeButton->render(renderer);
+        resumeButton->render(renderer);
         break;
     }
     case GameState::GAME_OVER:
@@ -293,6 +317,16 @@ void GameLoop::clean() {
     if (pauseButton) {
         delete pauseButton;
         pauseButton = NULL;
+    }
+
+    if (homeButton) {
+        delete homeButton;
+        homeButton = NULL;
+    }
+
+    if (resumeButton) {
+        delete resumeButton;
+        resumeButton = NULL;
     }
 
     TextureManager::Instance()->clean();

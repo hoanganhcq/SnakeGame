@@ -45,6 +45,8 @@ private:
     Menu* menu;
     
     Button* pauseButton;
+    Button* homeButton;
+    Button* resumeButton;
 public:
     GameLoop();
 

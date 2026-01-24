@@ -3,6 +3,7 @@
 Snake:: Snake() {
     headTexture = TextureManager::Instance()->getTexture("snake_head");
     bodyTexture = TextureManager::Instance()->getTexture("snake_body");
+    tailTexture = TextureManager::Instance()->getTexture("snake_tail");
 
     // init with 3 segments
     body.push_back({5, 7, 1, 0});
@@ -105,14 +106,38 @@ void Snake::render(SDL_Renderer* renderer) {
         segmentDest.x = seg.col_x * GRID_SIZE;
         segmentDest.y = seg.row_y * GRID_SIZE;
 
-        double angle = 0;
+        SDL_Texture* currentTexture = NULL;
+        double angle = 0.0;
+        SDL_RendererFlip flip = SDL_FLIP_NONE;
+
         if (seg.dirX == -1) angle = 180;
         else if (seg.dirY == 1) angle = 90;
         else if (seg.dirY == -1) angle = -90;
 
-        SDL_Texture* currentTexture = (i == 0) ? headTexture : bodyTexture;
+        
+        if (i == 0) {
+            currentTexture = headTexture;
+        } else if (i == body.size() - size_t(1)) {
+            currentTexture = tailTexture;
 
-        SDL_RenderCopyEx(renderer, currentTexture, NULL, &segmentDest, angle, NULL, SDL_FLIP_NONE);
+            if (body.size() >= 2) {
+                const SnakeSegment& prev = body[body.size() - 2];
+ 
+                if (prev.dirX == 1)  angle = 0;
+                else if (prev.dirX == -1) angle = 180;
+                else if (prev.dirY == 1)  angle = 90;
+                else if (prev.dirY == -1) angle = -90;
+            } else {
+                if (seg.dirX == 1)  angle = 180;
+                else if (seg.dirX == -1) angle = 0;
+                else if (seg.dirY == 1)  angle = -90;
+                else if (seg.dirY == -1) angle = 90;
+            }
+        } else {
+            currentTexture = bodyTexture;
+        }
+
+        SDL_RenderCopyEx(renderer, currentTexture, NULL, &segmentDest, angle, NULL, flip);
     }
 }
 
